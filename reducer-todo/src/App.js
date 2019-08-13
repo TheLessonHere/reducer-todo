@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useReducer } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import TodoList from './components/TodoList.js';
+import TodoForm from './components/TodoForm.js';
+import {
+  todoReducer,
+  initialState
+} from './reducers/todoReducer';
+
+const App = () => {
+  const [{ todos }, dispatch] = useReducer(todoReducer, initialState);
+
+  const filterCompleted = (e) => {
+    e.preventDefault();
+    dispatch({ type: 'FILTER_LIST' });
+  }
+
+  const toggleCompleted = (id) => {
+    console.log('toggleCompleted', id);
+    dispatch({ type: 'TOGGLE_ITEM', payload: id });
+  }
+
+  const addTodo = (item) => {
+    console.log(item);
+    dispatch({ type: 'ADD_ITEM', payload: item });
+  };
+
+    return (
+      <div>
+        <h2>Welcome to your Todo App!</h2>
+        <TodoList todos={todos}
+                  toggleCompleted={toggleCompleted}
+        />
+        <TodoForm addTodo={addTodo} 
+                  filterTodos={filterCompleted} />
+      </div>
+    );
 }
 
 export default App;
